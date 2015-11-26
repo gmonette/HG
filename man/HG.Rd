@@ -29,13 +29,31 @@ rewritten back to SPSS.
 The main \code{haven} functions are \code{\link[haven]{read_sav}} and
 \code{\link[haven]{write_sav}}.
 
-The data frame created by \code{read_sav} stores SPSS
-\emph{variable labels} in the 'label' attribute of each variable
+If a variable in the SPSS file has a \emph{variable label} then
+\code{read_sav} stores the label in the'label' attribute of the
+corresponding R variable.  The class of the variable is not
+affected by the presence of a variable label. Thus variable labels
+can be read and and set with:
+\code{attr(data$Gender,"label")}
+\code{attr(data$Gender,"label") <- "Gender of respondent"}
+
+The \code{\link{varlab}} function provides an alternative way of doing this:
+\code{varlab(data$Gender)}  \cr
+\code{varlab(data$Gender) <- "Gender of respondent"}
+
+You can read all the variable labels for a whole data frame with: \cr
+\code{vlabs <- varlabels(data)}  \cr
+and later restore those variable labels with \cr
+\code{varlabels(data) <- vlabs}
+
+If the SPSS variable has \emph{value labels} then these labels
+are stored in the 'labels' (note the plural) attribute of the
+R variable and its class is set to \code{\link[haven]{labelled}}.
+
 (e.g.\code{attr(dd$Sex,'label')}) and the \emph{value labels} are
 stored in the 'labels' attribute (e.g.\code{attr(dd$Sex,'labels')}).
-Variables with value labels belong to the \code{labelled} class.
-\code{\link[haven]{read_sav}} will have raw character and numeric variables
-some of which will have class 'label'
+Variables that have value labels in data sets created by \code{read_sav}
+belong to \code{haven}'s \code{\link[haven]{labelled}} class.
 
 Many manipulations in R will lose the variable labels. These need to be
 restored before writing the file back to SPSS.
@@ -44,6 +62,10 @@ Current and planned functions to work with 'haven':
 
 \code{\link{toR}}: Transform 'labelled' variables to factors.
 
-This is a test to see whether math works: \deqn{y = X \beta+ \epsilon}.
+\code{\link{varlabels}}: Read and restore \emph{variable labels} for a data frame.
+
+\code{\link{varlab}}: Read and modify \emph{value label} for individual variable.
+
+\code{\link{merge_check}}: Check compatibility of variable classes for merging.
 }
 
